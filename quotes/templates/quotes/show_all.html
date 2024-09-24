@@ -1,0 +1,20 @@
+<!-- quotes/templates/quotes/show_all.html -->
+{% extends 'quotes/base.html' %}
+
+{% block title %}All Quotes and Images{% endblock %}
+
+{% block content %}
+    <h1>All Quotes</h1>
+    <ul>
+        {% for quote in quotes %}
+            <li>{{ quote }}</li>
+        {% endfor %}
+    </ul>
+    
+    <h1>All Images</h1>
+    <div class="images-container">
+        {% for image_url in images %}
+            <img src="{{ image_url }}" alt="Image" style="width: 200px; height: auto; margin: 10px;">
+        {% endfor %}
+    </div>
+{% endblock %}
