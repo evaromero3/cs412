@@ -1,0 +1,57 @@
+<!-- restaurant/templates/restaurant/order.html -->
+{% extends 'restaurant/base.html' %}
+{% block content %}
+<div>
+<h2>Order Form</h2>
+<form action="{% url 'confirmation' %}" method="POST">
+    {% csrf_token %}
+    <!-- ordering food -->
+    <h4>Please check the items you would like to order.</h4>
+        <input type="checkbox" id="beef_empanada" name="food" value="Beef Empanada">
+        <label for="beef_empanada"> 3 Beef Empanadas - $9.00</label><br>
+        <p>Crunchy, savory pastry filled with seasoned beef and spices.</p>
+
+        <input type="checkbox" id="chx_empanada" name="food" value="Chicken Empanada">
+        <label for="chx_empanada"> 3 Chicken Empanada - $9.00 </label><br>
+        <p>Crispy pastry stuffed with shredded chicken and flavorful seasonings.</p>
+
+        <input type="checkbox" id="sancocho" name="food" value="Sancocho">
+        <label for="sancocho"> Sancocho - $12.00</label><br>
+        <p>Hearty soup with meat, root vegetables, and aromatic herbs.</p>
+
+        <input type="checkbox" id="bandeja_paisa" name="food" value="Bandeja Paisa">
+        <label for="bandeja_paisa"> Bandeja Paisa - $18.00</label><br>
+        <p>Abundant platter featuring beans, rice, meat, and avocado.</p>
+
+        <!-- Toppings/Extras for Bandeja Paisa -->
+        <div id="bandeja_paisa_extras" style="margin-left: 20px;">
+            <h5>Bandeja Paisa Extras:</h5>
+            <input type="checkbox" id="extra_egg" name="food" value="Fried Egg">
+            <label for="extra_egg"> Add Fried Egg - $1.50</label><br>
+            
+            <input type="checkbox" id="extra_chorizo" name="food" value="Chorizo">
+            <label for="extra_chorizo"> Add Chorizo - $2.00</label><br>
+            
+            <input type="checkbox" id="extra_arepa" name="extras" value="Arepa">
+            <label for="extra_arepa"> Add Arepa - $1.75</label><br>
+        </div>
+
+    <h3>Daily Special</h3>
+        <input type="checkbox" id="daily_special" name="food" value="{{ daily_special }}">
+        <label for="daily_special"> {{ daily_special }} - ${{ special_price }}</label><br>
+
+        
+
+    <h3>Special Instructions</h3>
+        <textarea name="instructions" id="instructions" cols="30" rows="10" placeholder="Enter any special instructions here..."></textarea>
+
+    <h3>Customer Information</h3>
+        <input type="text" id="name" name="name" placeholder="Full Name"> <br>
+        <input type="text" id="phone" name="phone" placeholder="Phone Number"> <br>
+        <input type="text" id="email" name="email" placeholder="Email"> <br>
+
+    
+    <input type="submit">
+</form>
+</div>
+{% endblock %}

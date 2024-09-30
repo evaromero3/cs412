@@ -1,0 +1,77 @@
+body {
+    background-color: #FFFFC5; /* Set background color */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+.main_img {
+    width: 70%; /* Make the image take the full width of its container */
+    height: auto; /* Maintain the aspect ratio */
+    max-width: 600px; /* Optional: set a maximum width */
+    display: block; /* Centers the image */
+    margin: 0 auto; /* Centers the image horizontally */
+}
+
+h1{
+    
+    color:#FF474C;
+}
+
+h2{
+    color:blue;
+}
+
+.header {
+    max-width: 800px; /* Set a maximum width for the container */
+    margin: 0 auto; /* Center the container horizontally */
+    /*padding: 20px; /* Add some padding for spacing */
+    text-align: center; /* Center text inside the container */
+}
+
+nav {
+    margin: 20px 0; /* Add vertical spacing for the nav */
+}
+
+nav a {
+    display: inline-block; /* Make links display inline */
+    margin: 0 15px; /* Add horizontal spacing between links */
+    padding: 5px 15px; /* Add padding inside the boxes */
+    text-decoration: none; /* Remove underline from links */
+    color: black; /* Set link color */
+    background-color: #FFF; /* Set background color for the boxes */
+    border: 2px solid #333; /* Add a border around the boxes */
+}
+
+nav a:hover {
+    background-color: #f0f0f0; /* Change background color on hover */
+    text-decoration: none; /* Keep underline off on hover */
+}
+
+input[type="text"]{
+    padding:5px;
+    margin:5px;
+}
+
+input[type="submit"]{
+    margin:10px;
+
+}
+
+form p {
+    margin: 0; /* Removes the default margin */
+    margin-bottom:15px;
+    font-size:10px;
+}
+
+p{
+    margin:10px;
+}
+
+.hours-table {
+    width: 30%; /* Set a width for the table */
+    max-width: 600px; /* Optional: set a maximum width */
+    border-collapse: collapse; /* Merge table borders */
+    margin: 20px auto; /* Center the table horizontally */
+}
+
+
