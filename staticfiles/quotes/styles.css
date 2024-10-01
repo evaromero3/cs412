@@ -1,0 +1,34 @@
+
+body, h1, p {
+    margin: 100;
+    padding: 0;
+}
+
+/* Set the background color and font */
+body {
+    background-color: lightgreen; /* Light green background */
+    font-family: Arial, sans-serif; /* Clean sans-serif font */
+    line-height: 1.6; /* Better line spacing */
+    padding-top: 20px; /* Space at the top */
+}
+
+/* Image styles */
+img {
+    width: 200px; /* Fixed width */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 5px; /* Slightly rounded corners */
+    margin: 10px; /* Add margin around images */
+}
+
+/* Navigation styles */
+nav a {
+    color: #007BFF; /* Link color */
+    text-decoration: none; /* Remove underline */
+    margin-right: 15px; /* Spacing between links */
+}
+
+nav a:hover {
+    text-decoration: underline; /* Underline on hover */
+    color: #0056b3; /* Darker blue on hover */
+}
