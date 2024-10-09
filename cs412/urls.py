@@ -26,4 +26,6 @@ urlpatterns = [
     #path('', include('quotes.urls')),  # Redirect root URL to quotes
 ] 
 
+urlpatterns += static(settings.STATIC_URL, document_root=setting.STATIC_ROOT)
+#urlpatterns += static(setting.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
