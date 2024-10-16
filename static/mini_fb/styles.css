@@ -54,14 +54,6 @@ tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-/* Profile Image Styling */
-img {
-    border-radius: 50%;
-    height: 100px;
-    width: 100px;
-    object-fit: cover;
-}
-
 /* Buttons and Links */
 a, button {
     background-color: #3b5998;
@@ -74,4 +66,12 @@ a, button {
 
 a:hover, button:hover {
     background-color: #2d4373;
+}
+
+/* Profile Image on show_profile page */
+.profile-image-large {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 0 !important; /* This will ensure the image is square */
 }
