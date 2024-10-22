@@ -75,3 +75,18 @@ a:hover, button:hover {
     object-fit: cover;
     border-radius: 0 !important; /* This will ensure the image is square */
 }
+
+/* In your main CSS file */
+.small-button {
+    padding: 5px 10px;
+    font-size: 0.8em;
+    background-color: #3b5998;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.small-button:hover {
+    background-color: #2d4373;
+}

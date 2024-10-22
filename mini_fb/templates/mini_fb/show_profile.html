@@ -14,13 +14,31 @@
 <h3>Status Messages</h3>
 <ul>
     {% for status in profile.get_status_messages %}
-        <li><strong>{{ status.timestamp }}:</strong> {{ status.message }}</li>
+        <li>
+            <strong>{{ status.timestamp }}:</strong> {{ status.message }}
+            
+            <!-- Display delete link for each status message -->
+            <a href="{% url 'update_status' status.pk %}" class="small-button">Update</a>
+             <a href="{% url 'delete_status' status.pk %}" class="small-button">Delete</a>
+
+
+            <!-- Display associated images (if any) -->
+            {% if status.get_images %}
+                <div class="status-images">
+                    {% for img in status.get_images %}
+                        <img src="{{ img.image_file.url }}" alt="Status image" style="max-width: 300px;">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </li>
     {% empty %}
         <li>No status messages available.</li>
     {% endfor %}
 </ul>
 
 <a href="{% url 'create_status' profile.pk %}">Post a New Status</a>
+
+<a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
 
 <a href="{% url 'show_all_profiles' %}">Back to All Profiles</a>
 {% endblock %}
