@@ -1,6 +1,6 @@
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView
 from django.views.generic import DeleteView, UpdateView
 from .models import Profile, StatusMessage, Image
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
@@ -88,3 +88,36 @@ class UpdateStatusMessageView(UpdateView):
     def get_success_url(self):
         profile_pk = self.object.profile.pk  # Get the profile pk related to the status message
         return reverse('show_profile', args=[profile_pk])
+
+class CreateFriendView(View):
+    def dispatch(self, request, *args, **kwargs):
+        # Retrieve the profiles using pk and other_pk
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        other_profile = get_object_or_404(Profile, pk=self.kwargs['other_pk'])
+
+        # Add friend if valid
+        profile.add_friend(other_profile)
+
+        # Redirect back to the profile page
+        return redirect('show_profile', pk=profile.pk)
+
+class ShowFriendSuggestionsView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['friend_suggestions'] = self.object.get_friend_suggestions()
+        return context
+
+class ShowNewsFeedView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/news_feed.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+        context['news_feed'] = profile.get_news_feed()
+        return context

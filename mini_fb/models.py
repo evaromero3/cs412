@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 # Profile model for Facebook-like users
 class Profile(models.Model):
@@ -20,6 +21,41 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse('show_profile', args=[self.pk])
 
+     # New: Method to retrieve all friends for the Profile
+    def get_friends(self):
+        friends = Friend.objects.filter(models.Q(profile1=self) | models.Q(profile2=self))
+        friend_profiles = []
+        for friend in friends:
+            if friend.profile1 == self:
+                friend_profiles.append(friend.profile2)
+            else:
+                friend_profiles.append(friend.profile1)
+        return friend_profiles
+    
+    def add_friend(self, other):
+        if self != other:  # Avoid self-friending
+            existing_friend = Friend.objects.filter(
+                models.Q(profile1=self, profile2=other) | models.Q(profile1=other, profile2=self)
+            )
+            if not existing_friend.exists():
+                Friend.objects.create(profile1=self, profile2=other, timestamp=timezone.now())
+
+
+    def get_friend_suggestions(self):
+        # Get all current friends' IDs
+        friend_ids = [f.profile1.id if f.profile2 == self else f.profile2.id for f in Friend.objects.filter(profile1=self) | Friend.objects.filter(profile2=self)]
+
+        # Add the current profile's ID to exclude self from suggestions
+        friend_ids.append(self.id)
+
+        # Filter profiles that are not in the friend list and not self
+        suggestions = Profile.objects.exclude(id__in=friend_ids)
+        return suggestions
+
+    def get_news_feed(self):
+        friend_profiles = self.get_friends()
+        all_profiles = [self] + friend_profiles  # Include self and friends
+        return StatusMessage.objects.filter(profile__in=all_profiles).order_by('-timestamp')
 
 # StatusMessage model to represent Facebook-like status updates
 class StatusMessage(models.Model):
@@ -43,3 +79,12 @@ class Image(models.Model):
 
     def __str__(self):
         return self.image_file.name
+
+# Friend model to represent friendships between profiles
+class Friend(models.Model):
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile1")
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile2")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.profile1} & {self.profile2}"

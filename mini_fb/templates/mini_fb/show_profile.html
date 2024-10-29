@@ -1,32 +1,50 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-<h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
-<img src="{{ profile.profile_image_url }}" alt="{{ profile.first_name }}" class="profile-image-large">
+<div class="profile-container">
+    <!-- Profile Image -->
+    <img src="{{ profile.profile_image_url }}" alt="{{ profile.first_name }}" class="profile-image-large">
+    
+    <!-- Profile Information Table -->
+    <div class="profile-info">
+        <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
+        <table>
+            <tr><th>First Name</th><td>{{ profile.first_name }}</td></tr>
+            <tr><th>Last Name</th><td>{{ profile.last_name }}</td></tr>
+            <tr><th>City</th><td>{{ profile.city }}</td></tr>
+            <tr><th>Email</th><td>{{ profile.email }}</td></tr>
+        </table>
+    </div>
+</div>
 
-<table>
-    <tr><th>First Name</th><td>{{ profile.first_name }}</td></tr>
-    <tr><th>Last Name</th><td>{{ profile.last_name }}</td></tr>
-    <tr><th>City</th><td>{{ profile.city }}</td></tr>
-    <tr><th>Email</th><td>{{ profile.email }}</td></tr>
-</table>
+<!-- Friends Section -->
+<h3>Friends</h3>
+<ul class="friends-list">
+    {% for friend in profile.get_friends %}
+        <li>
+            <a href="{% url 'show_profile' friend.pk %}" class="friend-item">
+                {{ friend.first_name }} {{ friend.last_name }}</a>
+        </li>
+    {% empty %}
+        <p>No friends available.</p>
+    {% endfor %}
+</ul>
+
+<!-- Buttons for Friend Suggestions, News Feed, etc. -->
+<a href="{% url 'create_status' profile.pk %}" class="button">Post a New Status</a>
+<a href="{% url 'news_feed' profile.pk %}" class="button">View News Feed</a>
+<a href="{% url 'friend_suggestions' profile.pk %}" class="button">Show Friend Suggestions</a>
+<a href="{% url 'show_all_profiles' %}" class="button">Back to All Profiles</a>
 
 <h3>Status Messages</h3>
-<ul>
+<ul class="status-list">
     {% for status in profile.get_status_messages %}
-        <li>
+        <li class="status-item">
             <strong>{{ status.timestamp }}:</strong> {{ status.message }}
-            
-            <!-- Display delete link for each status message -->
-            <a href="{% url 'update_status' status.pk %}" class="small-button">Update</a>
-             <a href="{% url 'delete_status' status.pk %}" class="small-button">Delete</a>
-
-
-            <!-- Display associated images (if any) -->
             {% if status.get_images %}
                 <div class="status-images">
                     {% for img in status.get_images %}
-                        <img src="{{ img.image_file.url }}" alt="Status image" style="max-width: 300px;">
+                        <img src="{{ img.image_file.url }}" alt="Status image" style="max-width: 100%;">
                     {% endfor %}
                 </div>
             {% endif %}
@@ -35,10 +53,4 @@
         <li>No status messages available.</li>
     {% endfor %}
 </ul>
-
-<a href="{% url 'create_status' profile.pk %}">Post a New Status</a>
-
-<a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
-
-<a href="{% url 'show_all_profiles' %}">Back to All Profiles</a>
 {% endblock %}

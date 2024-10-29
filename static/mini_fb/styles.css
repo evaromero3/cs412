@@ -90,3 +90,27 @@ a:hover, button:hover {
 .small-button:hover {
     background-color: #2d4373;
 }
+
+/* Friends List Styling */
+.friends-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+.friend-item {
+    background-color: #3b5998;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    
+}
+
+.friend-item:hover {
+    background-color: #2d4373;
+}
