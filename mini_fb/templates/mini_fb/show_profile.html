@@ -17,6 +17,13 @@
     </div>
 </div>
 
+{% if user.is_authenticated and user == profile.user %}
+    <a href="{% url 'update_profile' %}" class="button">Update Profile</a>
+    <a href="{% url 'create_status' %}" class="button">Post a New Status</a>
+    <a href="{% url 'friend_suggestions' %}" class="button">Show Friend Suggestions</a>
+{% endif %}
+
+
 <!-- Friends Section -->
 <h3>Friends</h3>
 <ul class="friends-list">
@@ -31,9 +38,7 @@
 </ul>
 
 <!-- Buttons for Friend Suggestions, News Feed, etc. -->
-<a href="{% url 'create_status' profile.pk %}" class="button">Post a New Status</a>
-<a href="{% url 'news_feed' profile.pk %}" class="button">View News Feed</a>
-<a href="{% url 'friend_suggestions' profile.pk %}" class="button">Show Friend Suggestions</a>
+<a href="{% url 'news_feed' %}" class="button">View News Feed</a>
 <a href="{% url 'show_all_profiles' %}" class="button">Back to All Profiles</a>
 
 <h3>Status Messages</h3>
