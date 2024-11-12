@@ -8,10 +8,13 @@
     <div class="filter-form-container">
         <form method="get" action="{% url 'graphs' %}">
             {{ form.as_p }}
-            <button type="submit">Filter</button>
-            <a href="{% url 'graphs' %}"><button type="button">Clear Filters</button></a>
+            <button type="submit" class="filter-button">Filter</button>
+            <a href="{% url 'graphs' %}"><button type="button" class="clear-filters-button">Clear Filters</button></a>
         </form>
     </div>
+
+    <!-- Include Plotly.js once -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <!-- Graphs Display -->
     <div class="graphs-container">
