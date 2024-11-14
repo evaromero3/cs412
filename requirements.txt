@@ -1,8 +1,30 @@
--i https://pypi.org/simple
-asgiref==3.8.1; python_version >= '3.8'
-backports.zoneinfo==0.2.1; python_version < '3.9'
-django==4.2.16; python_version >= '3.8'
-gunicorn==23.0.0; python_version >= '3.7'
-packaging==24.1; python_version >= '3.8'
-sqlparse==0.5.1; python_version >= '3.8'
-typing-extensions==4.12.2; python_version < '3.11'
+asgiref==3.8.1
+backports.zoneinfo==0.2.1
+certifi==2024.8.30
+charset-normalizer==3.4.0
+colorclass==2.2.2
+distlib==0.3.9
+Django==4.2.16
+docopt==0.6.2
+filelock==3.16.1
+gunicorn==23.0.0
+idna==3.10
+numpy==1.24.4
+packaging==24.1
+pillow==10.4.0
+pip-upgrader==1.4.15
+pipenv==2024.4.0
+platformdirs==4.3.6
+python-dateutil==2.9.0.post0
+pytz==2024.2
+requests==2.32.3
+six==1.16.0
+sqlparse==0.5.1
+tenacity==9.0.0
+terminaltables==3.1.10
+typing_extensions==4.12.2
+tzdata==2024.2
+upgrade-requirements==1.7.0
+urllib3==2.2.3
+virtualenv==20.27.1
+whitenoise==6.7.0
