@@ -8,9 +8,10 @@ django = "*"
 gunicorn = "*"
 whitenoise = "*"
 pillow = "*"
-backports.zoneinfo = "*"
+plotly = "*"
+pandas = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.12"
