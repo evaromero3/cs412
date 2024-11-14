@@ -9,7 +9,7 @@ from datetime import datetime
 from django.core.paginator import Paginator
 from .forms import VoterFilterForm
 
-# Create your views here.
+# Create your views here
 
 from django.db.models import F
 
