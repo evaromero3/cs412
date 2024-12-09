@@ -1,0 +1,18 @@
+{% extends "project/base.html" %}
+
+{% block title %}
+{{ listing.item_name }}
+{% endblock %}
+
+{% block content %}
+<h1>{{ listing.item_name }}</h1>
+<p><strong>Description:</strong> {{ listing.description }}</p>
+<p><strong>Price:</strong> ${{ listing.price }}</p>
+<p><strong>Category:</strong> {{ listing.category.name }}</p>
+<p><strong>Seller:</strong> {{ listing.seller.first_name }} {{ listing.seller.last_name }}</p>
+<p><strong>Posted on:</strong> {{ listing.posted_date }}</p>
+{% if listing.picture %}
+    <img src="{{ listing.picture.url }}" alt="Image of {{ listing.item_name }}" style="width:300px;height:auto;">
+{% endif %}
+<a href="{% url 'listing_list' %}">Back to Listings</a>
+{% endblock %}

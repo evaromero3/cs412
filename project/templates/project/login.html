@@ -1,0 +1,22 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>Login</h1>
+
+<!-- Authentication form -->
+<form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form }}
+    <!-- Handle the 'next' redirect -->
+    {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% else %}
+        <input type="hidden" name="next" value="{% url 'listing_list' %}">
+    {% endif %}
+    <input type="submit" value="Login">
+</form>
+
+<hr>
+Don't have an account yet?<br>
+<a href="{% url 'create_profile' %}">Create A Profile</a>.
+{% endblock %}

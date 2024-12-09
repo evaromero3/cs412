@@ -1,0 +1,156 @@
+/* Styling for the listing list container */
+.listing-list-container {
+    text-align: center;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+/* Flexbox layout for three columns */
+.listing-list-container ul {
+    list-style: none; /* Remove bullet points */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to the next row */
+    justify-content: space-between; /* Distribute items evenly */
+    gap: 10px; /* Reduced spacing between items */
+}
+
+/* Style for each listing item */
+.listing-list-container ul li {
+    flex: 1 1 calc(33.333% - 10px); /* Adjust width to fit three items */
+    max-width: calc(33.333% - 10px); /* Prevent overflow */
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Ensure images fit nicely within the cards */
+.listing-list-container ul li img {
+    max-width: 100%;
+    max-height: 150px;
+    margin-bottom: 0; /* No extra spacing here */
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure the title is below the image */
+.listing-list-container ul li .listing-title {
+    margin-top: 10px; /* Add spacing between the image and the title */
+}
+
+.listing-list-container ul li .listing-title a {
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Blue color for links */
+    font-weight: bold;
+    display: block; /* Ensure the link behaves like a block element */
+    font-size: 1.1rem; /* Slightly larger font for the title */
+    text-align: center; /* Center the title text */
+}
+
+.listing-list-container ul li .listing-title a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Style the price below the title */
+.listing-list-container ul li p {
+    margin-top: 5px; /* Add a bit of space between the title and the price */
+    font-size: 1rem;
+    color: #333; /* Dark gray for the price */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .listing-list-container ul li {
+        flex: 1 1 calc(50% - 10px); /* Two items per row on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .listing-list-container ul li {
+        flex: 1 1 100%; /* One item per row on very small screens */
+    }
+}
+
+
+/* NAV BAR */
+
+.navbar {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between; /* Space between left and right sections */
+    align-items: center; /* Vertically center items */
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 10px 20px; /* Add padding */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: sticky; /* Keep the navbar fixed at the top */
+    top: 0;
+    z-index: 1000; /* Ensure it stays above other elements */
+}
+
+/* Navbar links */
+.navbar a {
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Blue color for links */
+    font-weight: bold;
+    margin-right: 15px; /* Add spacing between links */
+}
+
+.navbar a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Navbar sections */
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Create Profile */ 
+
+.signup-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+.signup-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.signup-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.signup-container form button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signup-container form button:hover {
+    background-color: #0056b3;
+}

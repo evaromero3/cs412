@@ -1,0 +1,22 @@
+{% extends 'project/base.html' %}
+
+{% block title %}Listings{% endblock %}
+
+{% block content %}
+<div class="listing-list-container">
+    <h1>Listings</h1>
+    <ul>
+        {% for listing in listings %}
+            <li>
+                {% if listing.image %}
+                    <img src="{{ listing.image.url }}" alt="{{ listing.item_name }}">
+                {% endif %}
+                <div class="listing-title">
+                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.item_name }}</a>
+                </div>
+                <p>${{ listing.price }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
