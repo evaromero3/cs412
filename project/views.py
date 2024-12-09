@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Listing, Profile
+from .models import Listing, Profile, Category, Inquiry
 from django.contrib.auth.models import User
-from .forms import CreateProfileForm
+from .forms import CreateProfileForm, ListingForm
 
 from django.urls import reverse_lazy
 
@@ -16,13 +16,58 @@ class ListingListView(ListView):
     template_name = 'project/listing_list.html'  # Template to render the view
     context_object_name = 'listings'  # Name to use for the object list in the template
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category = self.request.GET.get('category')
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+
+        if category:
+            queryset = queryset.filter(category__name=category)
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(price__lte=max_price)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Include categories for the filter
+        return context
+
+
 class ListingDetailView(DetailView):
     model = Listing
     template_name = 'project/listing_detail.html'
     context_object_name = 'listing'
 
-class MyAccountView(LoginRequiredMixin, TemplateView):
+class MyAccountView(LoginRequiredMixin, ListView):
+    model = Listing
     template_name = 'project/my_account.html'
+    context_object_name = 'listings'
+
+    def get_queryset(self):
+        # Fetch the current user's profile
+        current_profile = Profile.objects.filter(user=self.request.user).first()
+        # Fetch listings created by the current profile
+        return Listing.objects.filter(seller=current_profile)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_profile = Profile.objects.filter(user=self.request.user).first()
+
+        # Check the `view` query parameter
+        view = self.request.GET.get('view')
+        if view == 'inquiries':
+            context['show_inquiries'] = True
+            context['inquiries'] = Inquiry.objects.filter(buyer=current_profile)
+            context['show_listings'] = False
+        else:  # Default to showing listings
+            context['show_inquiries'] = False
+            context['show_listings'] = True
+
+        return context
 
 
 ### USER AUTHENTICATION ### 
@@ -53,3 +98,18 @@ class CreateProfileView(CreateView):
         else:
             # If the UserCreationForm is invalid, re-render the form with errors
             return self.form_invalid(form)
+
+### Creating Listing ###
+
+class CreateListingView(LoginRequiredMixin, CreateView):
+    model = Listing
+    form_class = ListingForm
+    template_name = 'project/create_listing.html'
+    success_url = reverse_lazy('my-account')  # Redirect back to My Account page after successful creation
+
+    def form_valid(self, form):
+        # Fetch the current user's profile using the ForeignKey relationship
+        current_profile = get_object_or_404(Profile, user=self.request.user)
+        # Automatically set the seller as the current profile
+        form.instance.seller = current_profile
+        return super().form_valid(form)

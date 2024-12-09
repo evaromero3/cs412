@@ -1,15 +1,55 @@
-{% extends "project/base.html" %}
+{% extends 'project/base.html' %}
 
 {% block title %}
 My Account
 {% endblock %}
 
 {% block content %}
-<h2>My Account</h2>
-<p>Welcome, {{ user.username }}!</p>
-<p>Email: {{ user.email }}</p>
-<form action="{% url 'logout' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="navbar-link">Logout</button>
-    </form>
+<div class="account-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Actions</h3>
+        <ul>
+            <li><a href="{% url 'my-account' %}?view=listings">View My Listings</a></li>
+            <li><a href="{% url 'my-account' %}?view=inquiries">View My Inquiries</a></li>
+            <li><a href="{% url 'create_listing' %}">Create a New Listing</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        {% if show_inquiries %}
+            <h2>My Inquiries</h2>
+            <ul>
+                {% for inquiry in inquiries %}
+                    <li>
+                        <strong>Listing:</strong> {{ inquiry.listing.item_name }}<br>
+                        <strong>Message:</strong> {{ inquiry.message }}<br>
+                        <strong>From:</strong> {{ inquiry.buyer.user.username }}<br>
+                        <strong>Date:</strong> {{ inquiry.sent_date }}
+                    </li>
+                {% empty %}
+                    <p>You have no inquiries yet.</p>
+                {% endfor %}
+            </ul>
+        {% elif show_listings %}
+            <h2>My Listings</h2>
+            <ul>
+                {% for listing in listings %}
+                    <li>
+                        {% if listing.picture %}
+                            <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}" style="max-width: 150px; max-height: 150px;">
+                        {% endif %}
+                        <div class="listing-title">
+                            <a href="{% url 'listing_detail' listing.id %}">{{ listing.item_name }}</a>
+                        </div>
+                        <p>${{ listing.price }}</p>
+                    </li>
+                {% empty %}
+                    <p>You have no listings yet.</p>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}
