@@ -5,9 +5,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import Listing, Profile, Category, Inquiry
 from django.contrib.auth.models import User
-from .forms import CreateProfileForm, ListingForm
+from .forms import CreateProfileForm, ListingForm, InquiryForm
+from django.contrib import messages
 
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -41,6 +43,24 @@ class ListingDetailView(DetailView):
     model = Listing
     template_name = 'project/listing_detail.html'
     context_object_name = 'listing'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['inquiry_form'] = InquiryForm()  # Add the inquiry form to the context
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()  # Fetch the current listing
+        form = InquiryForm(request.POST)
+        if form.is_valid():
+            # Save the inquiry and associate it with the listing and current user
+            inquiry = form.save(commit=False)
+            inquiry.listing = self.object
+            inquiry.buyer = Profile.objects.filter(user=self.request.user).first()
+            inquiry.save()
+            messages.success(request, "Your inquiry has been sent successfully!")
+            return HttpResponseRedirect(self.request.path_info)  # Redirect to the same page
+        return self.get(request, *args, **kwargs)
 
 class MyAccountView(LoginRequiredMixin, ListView):
     model = Listing
