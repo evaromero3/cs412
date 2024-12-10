@@ -1,17 +1,28 @@
+<!-- Extend the base template -->
 {% extends "project/base.html" %}
 
+<!-- Block to set the page title -->
 {% block title %}
 Create Profile
 {% endblock %}
 
+<!-- Block to define the main content of the page -->
 {% block content %}
-<h2>Create Your Profile</h2>
+<h2>Create Your Profile</h2> <!-- Page header for creating a profile -->
+
+<!-- Form for creating a profile -->
 <form method="post">
-    {% csrf_token %}
+    {% csrf_token %} <!-- CSRF token for form security -->
+    
+    <!-- Section for account information -->
     <h3>Account Information</h3>
-    {{ user_form.as_p }}
+    {{ user_form.as_p }} <!-- Render the user form fields (e.g., username, password) as paragraphs -->
+
+    <!-- Section for profile-specific information -->
     <h3>Profile Information</h3>
-    {{ form.as_p }}
+    {{ form.as_p }} <!-- Render the profile form fields (e.g., first name, last name, etc.) as paragraphs -->
+
+    <!-- Submit button for the form -->
     <button type="submit">Submit</button>
 </form>
 {% endblock %}

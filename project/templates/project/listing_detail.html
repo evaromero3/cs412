@@ -1,38 +1,49 @@
+<!-- Extend the base template -->
 {% extends 'project/base.html' %}
 
+<!-- Block to set the page title dynamically using the listing's item name -->
 {% block title %}
 {{ listing.item_name }}
 {% endblock %}
 
+<!-- Block to define the main content of the page -->
 {% block content %}
-<div class="listing-detail-page"> <!-- Parent container for green background -->
-    <div class="listing-detail-container">
-        <h1>{{ listing.item_name }}</h1>
+<div class="listing-detail-page"> <!-- Parent container for the green background -->
+    <div class="listing-detail-container"> <!-- Container for the listing details -->
+        <h1>{{ listing.item_name }}</h1> <!-- Dynamic listing title -->
+
+        <!-- Section for the image and details -->
         <div class="listing-detail-content">
-            <div class="listing-image">
-                {% if listing.picture %}
-                    <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}">
+            <div class="listing-image"> <!-- Container for the listing image -->
+                {% if listing.picture %} <!-- Check if a picture is associated with the listing -->
+                    <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}"> <!-- Display the image -->
                 {% else %}
-                    <p>No image available</p>
+                    <p>No image available</p> <!-- Fallback text if no image exists -->
                 {% endif %}
             </div>
-            <div class="listing-info">
-                <p><strong>Description:</strong> {{ listing.description }}</p>
-                <p><strong>Price:</strong> ${{ listing.price }}</p>
-                <p><strong>Category:</strong> {{ listing.category.name }}</p>
+            <div class="listing-info"> <!-- Container for listing information -->
+                <p><strong>Description:</strong> {{ listing.description }}</p> <!-- Display description -->
+                <p><strong>Price:</strong> ${{ listing.price }}</p> <!-- Display price -->
+                <p><strong>Category:</strong> {{ listing.category.name }}</p> <!-- Display category -->
+                <p><strong>Seller:</strong> {{ listing.seller }} </p> <!-- Display seller information -->
             </div>
         </div>
+
+        <!-- Divider between sections -->
         <hr class="section-divider">
         <hr class="section-divider">
-    {% if user.is_authenticated %}
-        <h2>Make an Inquiry</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ inquiry_form.as_p }}
-            <button type="submit" class="inquiry-button">Send Inquiry</button>
-        </form>
-    {% else %}
-        <p>You must <a href="{% url 'login' %}">log in</a> to make an inquiry.</p>
-    {% endif %}
+
+        {% if user.is_authenticated %} <!-- Check if the user is logged in -->
+            <h2>Make an Inquiry</h2> <!-- Section for making an inquiry -->
+            <form method="post"> <!-- Form to submit an inquiry -->
+                {% csrf_token %} <!-- CSRF token for security -->
+                {{ inquiry_form.as_p }} <!-- Render the inquiry form fields -->
+                <button type="submit" class="inquiry-button">Send Inquiry</button> <!-- Submit button -->
+            </form>
+        {% else %}
+            <!-- Message to prompt the user to log in if they are not authenticated -->
+            <p>You must <a href="{% url 'login' %}">log in</a> to make an inquiry.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -1,22 +1,30 @@
+<!-- Extend the base template -->
 {% extends 'project/base.html' %}
 
+<!-- Define the content block -->
 {% block content %}
-<h1>Login</h1>
+<h1>Login</h1> <!-- Page heading -->
 
 <!-- Authentication form -->
-<form method="POST" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form }}
-    <!-- Handle the 'next' redirect -->
-    {% if request.GET.next %}
-        <input type="hidden" name="next" value="{{ request.GET.next }}">
+<form method="POST" action="{% url 'login' %}"> <!-- Form submits to the login URL -->
+    {% csrf_token %} <!-- Cross-Site Request Forgery token for security -->
+    {{ form }} <!-- Django's built-in authentication form -->
+    
+    <!-- Handle the 'next' redirect to specify where to go after login -->
+    {% if request.GET.next %} <!-- Check if a 'next' parameter exists in the URL -->
+        <input type="hidden" name="next" value="{{ request.GET.next }}"> <!-- Use the 'next' parameter value -->
     {% else %}
-        <input type="hidden" name="next" value="{% url 'listing_list' %}">
+        <input type="hidden" name="next" value="{% url 'listing_list' %}"> <!-- Default redirect to the listing list -->
     {% endif %}
+    
+    <!-- Submit button for the form -->
     <input type="submit" value="Login">
 </form>
 
+<!-- Divider line -->
 <hr>
-Don't have an account yet?<br>
-<a href="{% url 'create_profile' %}">Create A Profile</a>.
+
+<!-- Link to the profile creation page -->
+Don't have an account yet?<br> <!-- Prompt for users without an account -->
+<a href="{% url 'create_profile' %}">Create A Profile</a>. <!-- Link to the Create Profile page -->
 {% endblock %}

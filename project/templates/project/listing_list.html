@@ -1,50 +1,55 @@
+<!-- Extend the base template -->
 {% extends 'project/base.html' %}
 
+<!-- Block to set the page title -->
 {% block title %}Listings{% endblock %}
 
+<!-- Block to define the main content of the page -->
 {% block content %}
-<div class="content-container">
+<div class="content-container"> <!-- Parent container for the page content -->
+
     <!-- Filter Section -->
     <div class="filter-section">
-        <form method="get">
+        <form method="get"> <!-- Form for applying filters -->
             <h3>Filter Listings</h3>
 
             <!-- Category Filter -->
             <label for="category">Category:</label>
-            <select name="category" id="category">
-                <option value="">All Categories</option>
-                {% for category in categories %}
+            <select name="category" id="category"> <!-- Dropdown for category selection -->
+                <option value="">All Categories</option> <!-- Default option to show all categories -->
+                {% for category in categories %} <!-- Loop through available categories -->
                     <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>
                         {{ category.name }}
-                    </option>
+                    </option> <!-- Preselect the category if it matches the current filter -->
                 {% endfor %}
             </select>
 
-            <!-- Price Filter -->
+            <!-- Price Filters -->
             <label for="min_price">Min Price:</label>
-            <input type="number" name="min_price" id="min_price" value="{{ request.GET.min_price }}">
+            <input type="number" name="min_price" id="min_price" value="{{ request.GET.min_price }}"> <!-- Minimum price input -->
 
             <label for="max_price">Max Price:</label>
-            <input type="number" name="max_price" id="max_price" value="{{ request.GET.max_price }}">
+            <input type="number" name="max_price" id="max_price" value="{{ request.GET.max_price }}"> <!-- Maximum price input -->
 
             <!-- Submit Button -->
-            <button type="submit">Apply Filters</button>
+            <button type="submit">Apply Filters</button> <!-- Button to apply filters -->
         </form>
     </div>
 
+    <!-- Listings Section -->
     <div class="homepage listing-list-container">
-        <ul>
-            {% for listing in listings %}
-                <li>
-                    {% if listing.picture %}
-                        <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}">
+        <ul> <!-- Unordered list for displaying listings -->
+            {% for listing in listings %} <!-- Loop through the listings -->
+                <li> <!-- Each listing item -->
+                    {% if listing.picture %} <!-- Check if a picture exists for the listing -->
+                        <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}"> <!-- Display the image -->
                     {% else %}
-                        <p>No image available for {{ listing.item_name }}</p>
+                        <p>No image available for {{ listing.item_name }}</p> <!-- Fallback message if no image exists -->
                     {% endif %}
                     <div class="listing-title">
-                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.item_name }}</a>
+                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.item_name }}</a> <!-- Link to the listing detail page -->
                     </div>
-                    <p>${{ listing.price }}</p>
+                    <p>${{ listing.price }}</p> <!-- Display the price of the listing -->
                 </li>
             {% endfor %}
         </ul>

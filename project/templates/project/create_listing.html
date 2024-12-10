@@ -1,23 +1,30 @@
 {% extends 'project/base.html' %}
 
+<!-- Block to set the page title -->
 {% block title %}
 Create Listing
 {% endblock %}
 
+<!-- Block to define the main content of the page -->
 {% block content %}
 <div class="page-container">
+    <!-- Header for the page -->
     <div class="page-header">
-        <h2>Create a New Listing</h2>
+        <h2>Create a New Listing</h2> <!-- Page title displayed on the page -->
     </div>
+    
+    <!-- Form container for creating a listing -->
     <div class="form-container">
         <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="button submit-button">Create Listing</button>
+            {% csrf_token %} <!-- CSRF token for form security -->
+            {{ form.as_p }} <!-- Renders the form fields as paragraphs -->
+            <button type="submit" class="button submit-button">Create Listing</button> <!-- Submit button for the form -->
         </form>
     </div>
+    
+    <!-- Cancel button to return to the "My Account" page -->
     <div class="cancel-container">
-        <a href="{% url 'my-account' %}" class="button cancel-button">Cancel</a>
+        <a href="{% url 'my-account' %}" class="button cancel-button">Cancel</a> <!-- Cancel button as a link -->
     </div>
 </div>
 {% endblock %}

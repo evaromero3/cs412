@@ -1,35 +1,36 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, get_object_or_404, redirect  # Django utilities for rendering templates and handling 404
+from django.views.generic import ListView, DetailView, CreateView, View  # Generic views for common patterns
+from django.contrib.auth.mixins import LoginRequiredMixin  # Mixin to require authentication for class-based views
+from django.contrib.auth.forms import UserCreationForm  # Built-in form for creating users
 
-from .models import Listing, Profile, Category, Inquiry
-from django.contrib.auth.models import User
-from .forms import CreateProfileForm, ListingForm, InquiryForm
-from django.contrib import messages
+from .models import Listing, Profile, Category, Inquiry  # Import models for data handling
+from django.contrib.auth.models import User  # Django's built-in User model
+from .forms import CreateProfileForm, ListingForm, InquiryForm  # Import custom forms for handling user input
+from django.contrib import messages  # Utility for displaying success/error messages to users
 
-from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.urls import reverse_lazy  # Lazy evaluation of URL paths
+from django.http import HttpResponseRedirect, HttpResponseBadRequest  # Utilities for HTTP responses
 
-# Create your views here.
-
+# Class-based view for listing all available listings
 class ListingListView(ListView):
-    model = Listing  # The model to retrieve data from
-    template_name = 'project/listing_list.html'  # Template to render the view
-    context_object_name = 'listings'  # Name to use for the object list in the template
+    model = Listing  # Specify the model to retrieve data from
+    template_name = 'project/listing_list.html'  # Template to render
+    context_object_name = 'listings'  # Variable name to use in the template
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        category = self.request.GET.get('category')
-        min_price = self.request.GET.get('min_price')
-        max_price = self.request.GET.get('max_price')
+        queryset = super().get_queryset()  # Retrieve the default queryset
+        category = self.request.GET.get('category')  # Filter by category if provided
+        min_price = self.request.GET.get('min_price')  # Minimum price filter
+        max_price = self.request.GET.get('max_price')  # Maximum price filter
 
-        queryset = queryset.filter(status='available')
+        queryset = queryset.filter(status='available')  # Only show available listings
 
         if self.request.user.is_authenticated:
+            # Exclude listings from the current user's profile
             current_profile = Profile.objects.filter(user=self.request.user).first()
             queryset = queryset.exclude(seller=current_profile)
 
+        # Apply additional filters
         if category:
             queryset = queryset.filter(category__name=category)
         if min_price:
@@ -40,28 +41,32 @@ class ListingListView(ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
+        # Add additional context to the template
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()  # Include categories for the filter
+        context['categories'] = Category.objects.all()  # Include all categories for filtering
         return context
 
-
+# Class-based view for showing listing details
 class ListingDetailView(DetailView):
-    model = Listing
-    template_name = 'project/listing_detail.html'
-    context_object_name = 'listing'
+    model = Listing  # Specify the model to retrieve
+    template_name = 'project/listing_detail.html'  # Template to render
+    context_object_name = 'listing'  # Variable name to use in the template
 
     def get_context_data(self, **kwargs):
+        # Add inquiry form if user is authenticated
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['inquiry_form'] = InquiryForm()
         return context
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()  # Fetch the current listing
+        # Handle form submission for making an inquiry
+        self.object = self.get_object()  # Retrieve the current listing
 
         if not request.user.is_authenticated:
+            # Redirect unauthenticated users to login
             messages.error(request, "You must be logged in to make an inquiry.")
-            return redirect('login')  # Redirect to login page
+            return redirect('login')
 
         form = InquiryForm(request.POST)
         if form.is_valid():
@@ -71,123 +76,107 @@ class ListingDetailView(DetailView):
             inquiry.buyer = Profile.objects.filter(user=self.request.user).first()
             inquiry.save()
             messages.success(request, "Your inquiry has been sent successfully!")
-            return HttpResponseRedirect(self.request.path_info)  # Redirect to the same page
+            return HttpResponseRedirect(self.request.path_info)  # Stay on the same page
         return self.get(request, *args, **kwargs)
 
+# Class-based view for managing the user's account
 class MyAccountView(LoginRequiredMixin, ListView):
-    model = Listing
-    template_name = 'project/my_account.html'
-    context_object_name = 'listings'
+    model = Listing  # Specify the model to retrieve
+    template_name = 'project/my_account.html'  # Template to render
+    context_object_name = 'listings'  # Variable name to use in the template
 
     def get_queryset(self):
-        # Fetch the current user's profile
+        # Retrieve listings for the current user's profile
         current_profile = Profile.objects.filter(user=self.request.user).first()
-        # Fetch listings created by the current profile
         return Listing.objects.filter(seller=current_profile)
 
     def get_context_data(self, **kwargs):
+        # Add dynamic context based on query parameters
         context = super().get_context_data(**kwargs)
         current_profile = Profile.objects.filter(user=self.request.user).first()
 
-        # Check the `view` query parameter
-        view = self.request.GET.get('view')
+        view = self.request.GET.get('view')  # Determine which view to show
         if view == 'inquiries':
-            # Inquiries sent by the logged-in user
             context['show_inquiries'] = True
             context['inquiries'] = Inquiry.objects.filter(buyer=current_profile)
-            context['show_listings'] = False
-            context['show_received_inquiries'] = False
         elif view == 'received-inquiries':
-            # Inquiries made by others on the user's listings
             context['show_received_inquiries'] = True
             context['received_inquiries'] = Inquiry.objects.filter(
                 listing__seller=current_profile
             )
-            context['show_listings'] = False
-            context['show_inquiries'] = False
         else:
-            # Default to showing listings
             context['show_listings'] = True
-            context['show_inquiries'] = False
-            context['show_received_inquiries'] = False
 
-        # Add the current profile and user for display
-        context['current_profile'] = current_profile
-        context['current_user'] = self.request.user
+        context['current_profile'] = current_profile  # Add the profile to context
+        context['current_user'] = self.request.user  # Add the user to context
         return context
 
+### USER AUTHENTICATION ###
 
-
-
-### USER AUTHENTICATION ### 
-
+# Class-based view for creating a new profile
 class CreateProfileView(CreateView):
-    model = Profile
-    template_name = 'project/create_profile.html'
-    form_class = CreateProfileForm
+    model = Profile  # Specify the model to create
+    template_name = 'project/create_profile.html'  # Template to render
+    form_class = CreateProfileForm  # Form class for creating a profile
     success_url = reverse_lazy('my-account')  # Redirect after successful creation
 
     def get_context_data(self, **kwargs):
+        # Add the user creation form to the context
         context = super().get_context_data(**kwargs)
-        if 'user_form' not in context:
-            context['user_form'] = UserCreationForm()  # Add UserCreationForm to the context
+        context['user_form'] = UserCreationForm()
         return context
 
     def form_valid(self, form):
-        # Handle the UserCreationForm
+        # Handle user creation and profile association
         user_form = UserCreationForm(self.request.POST)
         if user_form.is_valid():
-            # Save the user
             user = user_form.save()
-            # Assign the user to the profile
             profile = form.save(commit=False)
             profile.user = user
             profile.save()
             return super().form_valid(form)
         else:
-            # If the UserCreationForm is invalid, re-render the form with errors
             return self.form_invalid(form)
 
-### Creating Listing ###
+### CREATING LISTINGS ###
 
+# Class-based view for creating a listing
 class CreateListingView(LoginRequiredMixin, CreateView):
-    model = Listing
-    form_class = ListingForm
-    template_name = 'project/create_listing.html'
-    success_url = reverse_lazy('my-account')  # Redirect back to My Account page after successful creation
+    model = Listing  # Specify the model to create
+    form_class = ListingForm  # Form class for creating a listing
+    template_name = 'project/create_listing.html'  # Template to render
+    success_url = reverse_lazy('my-account')  # Redirect after successful creation
 
     def form_valid(self, form):
-        # Fetch the current user's profile using the ForeignKey relationship
+        # Automatically assign the seller as the current profile
         current_profile = get_object_or_404(Profile, user=self.request.user)
-        # Automatically set the seller as the current profile
         form.instance.seller = current_profile
         return super().form_valid(form)
 
+### HANDLE INQUIRY STATUS ###
 
-### Listing and Inquiry Status 
+# Class-based view for accepting or rejecting inquiries
 class HandleInquiryView(LoginRequiredMixin, View):
     def post(self, request, inquiry_id, *args, **kwargs):
-        action = kwargs.get('action')  # Capture the action ('accept' or 'reject') from URL
-        inquiry = get_object_or_404(Inquiry, id=inquiry_id)
+        action = kwargs.get('action')  # Determine the action from the URL
+        inquiry = get_object_or_404(Inquiry, id=inquiry_id)  # Retrieve the inquiry
 
-        # Ensure only the seller can manage inquiries for their listing
         if inquiry.listing.seller.user != request.user:
+            # Ensure only the seller can manage the inquiry
             messages.error(request, "You are not authorized to manage this inquiry.")
             return redirect('my-account')
 
         if action == 'accept':
-            # Mark the inquiry as accepted and update the listing
             inquiry.status = 'accepted'
             inquiry.listing.status = 'bought'
             inquiry.listing.save()
             inquiry.save()
-            messages.success(request, f"Inquiry for '{inquiry.listing.item_name}' accepted. Listing marked as bought.")
+            messages.success(request, f"Inquiry for '{inquiry.listing.item_name}' accepted.")
         elif action == 'reject':
-            # Mark the inquiry as rejected
             inquiry.status = 'rejected'
             inquiry.save()
             messages.success(request, f"Inquiry for '{inquiry.listing.item_name}' rejected.")
         else:
             return HttpResponseBadRequest("Invalid action.")
-        
+
         return redirect('my-account')

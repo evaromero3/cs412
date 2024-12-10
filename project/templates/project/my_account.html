@@ -1,15 +1,19 @@
+<!-- Extend the base template -->
 {% extends 'project/base.html' %}
 
+<!-- Define the title block -->
 {% block title %}
-My Account
+My Account <!-- Page title -->
 {% endblock %}
 
+<!-- Define the content block -->
 {% block content %}
 <div class="account-container">
-    <!-- Sidebar -->
+    <!-- Sidebar for navigation and actions -->
     <div class="sidebar">
         <h3>Actions</h3>
         <ul>
+            <!-- Links to different views in the My Account section -->
             <li><a href="{% url 'my-account' %}?view=listings">View My Listings</a></li>
             <li><a href="{% url 'my-account' %}?view=inquiries">View My Inquiries</a></li>
             <li><a href="{% url 'my-account' %}?view=received-inquiries">Received Inquiries</a></li>
@@ -17,85 +21,95 @@ My Account
         </ul>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main content area -->
     <div class="main-content">
-        <!-- Display Logged-In User -->
+        <!-- Display logged-in user's name and profile details -->
         <h2>Welcome, {{ current_user.username }}</h2>
         <p>Profile: {{ current_profile.first_name }} {{ current_profile.last_name }}</p>
 
+        <!-- Show sent inquiries -->
         {% if show_inquiries %}
-    <h2>My Sent Inquiries</h2>
-    <ul>
-        {% for inquiry in inquiries %}
-            <li>
-                <strong>Listing:</strong> 
-                <a href="{% url 'listing_detail' inquiry.listing.id %}">{{ inquiry.listing.item_name }}</a><br>
-                <strong>Message:</strong> {{ inquiry.message }}<br>
-                <strong>Sent Date:</strong> {{ inquiry.sent_date }}<br>
-                <strong>Status:</strong> 
-                <span class="
-                    {% if inquiry.status == 'pending' %}status-pending{% endif %}
-                    {% if inquiry.status == 'accepted' %}status-accepted{% endif %}
-                    {% if inquiry.status == 'rejected' %}status-rejected{% endif %}
-                ">
-                    {{ inquiry.get_status_display }}
-                </span>
-            </li>
-        {% empty %}
-            <p>You have not sent any inquiries yet.</p>
-        {% endfor %}
+        <h2>My Sent Inquiries</h2>
+        <ul>
+            {% for inquiry in inquiries %}
+                <li>
+                    <!-- Inquiry details -->
+                    <strong>Listing:</strong> 
+                    <a href="{% url 'listing_detail' inquiry.listing.id %}">{{ inquiry.listing.item_name }}</a><br>
+                    <strong>Message:</strong> {{ inquiry.message }}<br>
+                    <strong>Sent Date:</strong> {{ inquiry.sent_date }}<br>
+                    <strong>Status:</strong> 
+                    <!-- Display status with conditional styling -->
+                    <span class="
+                        {% if inquiry.status == 'pending' %}status-pending{% endif %}
+                        {% if inquiry.status == 'accepted' %}status-accepted{% endif %}
+                        {% if inquiry.status == 'rejected' %}status-rejected{% endif %}
+                    ">
+                        {{ inquiry.get_status_display }}
+                    </span>
+                </li>
+            {% empty %}
+                <p>You have not sent any inquiries yet.</p> <!-- Message if no inquiries -->
+            {% endfor %}
         </ul>
-        
+
+        <!-- Show received inquiries -->
         {% elif show_received_inquiries %}
         <h2>Received Inquiries</h2>
-            <ul>
-                {% for inquiry in received_inquiries %}
-                    <li>
-                        <strong>Listing:</strong> <a href="{% url 'listing_detail' inquiry.listing.id %}">{{ inquiry.listing.item_name }}</a><br>
-                        <strong>Message:</strong> {{ inquiry.message }}<br>
-                        <strong>From:</strong> {{ inquiry.buyer.first_name }} {{ inquiry.buyer.last_name }}<br>
-                        <strong>Sent Date:</strong> {{ inquiry.sent_date }}<br>
-                        <strong>Status:</strong> {{ inquiry.get_status_display }}<br>
+        <ul>
+            {% for inquiry in received_inquiries %}
+                <li>
+                    <!-- Inquiry details -->
+                    <strong>Listing:</strong> <a href="{% url 'listing_detail' inquiry.listing.id %}">{{ inquiry.listing.item_name }}</a><br>
+                    <strong>Message:</strong> {{ inquiry.message }}<br>
+                    <strong>From:</strong> {{ inquiry.buyer.first_name }} {{ inquiry.buyer.last_name }}<br>
+                    <strong>Sent Date:</strong> {{ inquiry.sent_date }}<br>
+                    <strong>Status:</strong> {{ inquiry.get_status_display }}<br>
 
-                        {% if inquiry.status == 'pending' %}
-                        <form method="post" action="{% url 'accept_inquiry' inquiry.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="button accept-button">Accept</button>
-                        </form>
-                        <form method="post" action="{% url 'reject_inquiry' inquiry.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="button reject-button">Reject</button>
-                        </form>
+                    <!-- Accept/Reject buttons for pending inquiries -->
+                    {% if inquiry.status == 'pending' %}
+                    <form method="post" action="{% url 'accept_inquiry' inquiry.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button accept-button">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'reject_inquiry' inquiry.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button reject-button">Reject</button>
+                    </form>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <p>You have not received any inquiries yet.</p> <!-- Message if no inquiries -->
+            {% endfor %}
+        </ul>
+
+        <!-- Show listings -->
+        {% elif show_listings %}
+        <h2>My Listings</h2>
+        <ul>
+            {% for listing in listings %}
+                <li>
+                    <!-- Listing details -->
+                    {% if listing.picture %}
+                        <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}" style="max-width: 150px; max-height: 150px;">
+                    {% endif %}
+                    <div class="listing-title">
+                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.item_name }}</a>
+                    </div>
+                    <p>Price: ${{ listing.price }}</p>
+                    <p>Status: 
+                        <!-- Display status with styling -->
+                        {% if listing.status == 'available' %}
+                            <span style="color: green;">Available</span>
+                        {% else %}
+                            <span style="color: red;">Bought</span>
                         {% endif %}
-                    </li>
-                {% empty %}
-                    <p>You have not received any inquiries yet.</p>
-                {% endfor %}
-            </ul>        
-            {% elif show_listings %}
-            <h2>My Listings</h2>
-            <ul>
-                {% for listing in listings %}
-                    <li>
-                        {% if listing.picture %}
-                            <img src="{{ listing.picture.url }}" alt="{{ listing.item_name }}" style="max-width: 150px; max-height: 150px;">
-                        {% endif %}
-                        <div class="listing-title">
-                            <a href="{% url 'listing_detail' listing.id %}">{{ listing.item_name }}</a>
-                        </div>
-                        <p>Price: ${{ listing.price }}</p>
-                        <p>Status: 
-                            {% if listing.status == 'available' %}
-                                <span style="color: green;">Available</span>
-                            {% else %}
-                                <span style="color: red;">Bought</span>
-                            {% endif %}
-                        </p>
-                    </li>
-                {% empty %}
-                    <p>You have no listings yet.</p>
-                {% endfor %}
-            </ul>
+                    </p>
+                </li>
+            {% empty %}
+                <p>You have no listings yet.</p> <!-- Message if no listings -->
+            {% endfor %}
+        </ul>
         {% endif %}
     </div>
 </div>
