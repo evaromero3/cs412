@@ -11,7 +11,6 @@ body {
     padding: 0;
     width: 100%; /* Ensure the body takes full width */
     min-height: 100%; /* Ensure it covers the full height of the viewport */
-    display: block;
     flex-direction: column; /* Allow the footer to be positioned at the bottom */
 }
 
@@ -120,12 +119,15 @@ footer {
 }
 
 .filter-section {
-    width: 20%; /* Adjust width as needed */
+    position: sticky; /* Make the filter section sticky */
+    top: 70px; /* Set distance from the top when it sticks */
+    width: 20%; /* Set the width to match its container */
     background: #f9f9f9;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+    align-self: flex-start; /* Ensure it doesn't stretch vertically */
 }
 
 .filter-section h3 {
@@ -246,27 +248,40 @@ footer {
 
 /* MY ACCOUNT PAGE */
 
+/* Main container for the account page */
 .account-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
+    display: flex; /* Side-by-side layout for sidebar and main content */
+    gap: 20px; /* Spacing between sidebar and main content */
+    background-color: #ADD8E6; /* Matching background color */
+    padding: 20px; /* Padding around the container */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 90%; /* Restrict container width */
+    max-width: 1200px; /* Set maximum width */
+    margin: 20px auto; /* Center horizontally */
     box-sizing: border-box;
 }
 
+/* Sidebar styling */
 .sidebar {
-    width: 20%; /* Sidebar width */
-    background: #f9f9f9;
+    width: 20%; /* Width of the sidebar */
+    background-color: #f9f9f9; /* Light background */
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-sizing: border-box;
+    position: sticky; /* Stick the sidebar */
+    top: 20px; /* Distance from the top */
 }
 
 .sidebar h3 {
     margin-bottom: 15px;
+    font-size: 1.2rem; /* Slightly larger font */
+    color: #333; /* Dark text color */
 }
 
 .sidebar ul {
-    list-style: none;
+    list-style: none; /* Remove bullet points */
     padding: 0;
 }
 
@@ -275,36 +290,112 @@ footer {
 }
 
 .sidebar ul li a {
-    text-decoration: none;
-    color: #007bff;
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Blue color for links */
     font-weight: bold;
 }
 
 .sidebar ul li a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.logout-button {
+    background: none;
+    border: none;
+    color: #007bff; /* Blue link style for logout */
     text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit; /* Match font size with surrounding text */
 }
 
+.logout-button:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+/* Main content styling */
 .main-content {
-    flex: 1; /* Take up remaining space */
+    flex: 1; /* Take up the remaining space */
+    background-color: #ffffff; /* White background */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-size: 1rem; /* Standard font size */
+    line-height: 1.6; /* Improve readability */
+    color: #333; /* Dark text color */
+    text-align: left; /* Align text to the left */
 }
 
+/* Titles inside main content */
+.main-content h2 {
+    font-size: 1.5rem; /* Slightly larger font size for titles */
+    color: #007bff; /* Blue for titles */
+    margin-bottom: 20px;
+}
+
+/* Listing and inquiry list styling */
 .main-content ul {
-    list-style: none;
+    list-style: none; /* Remove bullet points */
     padding: 0;
+    margin: 0;
 }
 
 .main-content ul li {
-    margin-bottom: 20px;
     display: flex;
-    align-items: center;
-    gap: 15px;
+    align-items: center; /* Vertically center items */
+    gap: 15px; /* Add spacing between items */
+    background: #f9f9f9; /* Light background for items */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .main-content ul li img {
-    border-radius: 5px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px; /* Rounded corners */
+    max-width: 150px; /* Restrict image size */
+    max-height: 150px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
+.main-content ul li .listing-title {
+    font-size: 1.1rem; /* Slightly larger font */
+    font-weight: bold;
+    color: #007bff; /* Blue for titles */
+    margin-bottom: 5px;
+}
+
+.main-content ul li .listing-title a {
+    text-decoration: none; /* Remove underline */
+}
+
+.main-content ul li .listing-title a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.main-content ul li p {
+    font-size: 1rem; /* Standard font size */
+    color: #333; /* Dark text color */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .account-container {
+        flex-direction: column; /* Stack sidebar and main content vertically */
+    }
+
+    .sidebar {
+        width: 100%; /* Take full width */
+        position: static; /* Disable sticky positioning */
+    }
+
+    .main-content {
+        margin-top: 20px; /* Add spacing above */
+    }
+}
+
+
+
+/* LISTING DETAILS */
 /* Main container for listing details */
 .listing-detail-container {
     max-width: 900px;
@@ -354,7 +445,7 @@ footer {
 .section-divider {
     border: none;
     height: 2px;
-    background-color: #007bff; /* Blue divider color */
+    background-color: green; /* Blue divider color */
     margin: 30px 0;
 }
 
@@ -395,4 +486,128 @@ footer {
 
 .logout-button:hover {
     color: #0056b3;
+}
+
+/* CREATE LISTING */
+
+/* General Page Styling */
+.page-container {
+    max-width: 800px;
+    margin: 40px auto; /* Center the container horizontally */
+    padding: 20px;
+    background-color: #ffffff; /* White background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-family: 'Nunito', sans-serif; /* Global font */
+    color: #333; /* Dark gray text */
+}
+
+/* Header Section */
+.page-header h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #007bff; /* Blue color for the title */
+    margin-bottom: 20px;
+}
+
+/* Form Section */
+.form-container {
+    padding: 20px;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    gap: 15px; /* Add spacing between fields */
+}
+
+.form-container form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-container form input,
+.form-container form select,
+.form-container form textarea {
+    width: 100%; /* Full width for inputs */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+/* Submit Button */
+.submit-button {
+    background-color: #007bff; /* Blue button */
+    color: white;
+    border: none;
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Cancel Button Section */
+.cancel-container {
+    margin-top: 20px;
+    text-align: center; /* Center the cancel button */
+}
+
+.cancel-button {
+    background-color: #dc3545; /* Red button for cancel */
+    color: white;
+    border: none;
+}
+
+.cancel-button:hover {
+    background-color: #a71d2a; /* Darker red on hover */
+}
+
+
+/* Style for the messages container */
+.messages {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    position: fixed; /* Keep it visible in the viewport */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for exact centering */
+    z-index: 1000; /* Ensure it's on top of other elements */
+    width: 100%; /* Optional: Limit width if needed */
+}
+
+/* Style for individual messages */
+.message {
+    background-color: #d4edda; /* Light green background for success */
+    color: #155724; /* Dark green text */
+    padding: 15px 20px;
+    border: 1px solid #c3e6cb; /* Border matching background */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1.2rem; /* Slightly larger font */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center text inside the box */
+}
+
+/* Close button (optional) */
+.message .close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    color: #155724;
+    cursor: pointer;
 }

@@ -5,11 +5,19 @@ Create Listing
 {% endblock %}
 
 {% block content %}
-<h2>Create a New Listing</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="button">Create Listing</button>
-</form>
-<a href="{% url 'my-account' %}" class="button">Cancel</a>
+<div class="page-container">
+    <div class="page-header">
+        <h2>Create a New Listing</h2>
+    </div>
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button submit-button">Create Listing</button>
+        </form>
+    </div>
+    <div class="cancel-container">
+        <a href="{% url 'my-account' %}" class="button cancel-button">Cancel</a>
+    </div>
+</div>
 {% endblock %}
