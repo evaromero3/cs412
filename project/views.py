@@ -24,6 +24,10 @@ class ListingListView(ListView):
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
 
+        if self.request.user.is_authenticated:
+            current_profile = Profile.objects.filter(user=self.request.user).first()
+            queryset = queryset.exclude(seller=current_profile)
+
         if category:
             queryset = queryset.filter(category__name=category)
         if min_price:
@@ -46,11 +50,17 @@ class ListingDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['inquiry_form'] = InquiryForm()  # Add the inquiry form to the context
+        if self.request.user.is_authenticated:
+            context['inquiry_form'] = InquiryForm()
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()  # Fetch the current listing
+
+        if not request.user.is_authenticated:
+            messages.error(request, "You must be logged in to make an inquiry.")
+            return redirect('login')  # Redirect to login page
+
         form = InquiryForm(request.POST)
         if form.is_valid():
             # Save the inquiry and associate it with the listing and current user
@@ -80,14 +90,31 @@ class MyAccountView(LoginRequiredMixin, ListView):
         # Check the `view` query parameter
         view = self.request.GET.get('view')
         if view == 'inquiries':
+            # Inquiries sent by the logged-in user
             context['show_inquiries'] = True
             context['inquiries'] = Inquiry.objects.filter(buyer=current_profile)
             context['show_listings'] = False
-        else:  # Default to showing listings
+            context['show_received_inquiries'] = False
+        elif view == 'received-inquiries':
+            # Inquiries made by others on the user's listings
+            context['show_received_inquiries'] = True
+            context['received_inquiries'] = Inquiry.objects.filter(
+                listing__seller=current_profile
+            )
+            context['show_listings'] = False
             context['show_inquiries'] = False
+        else:
+            # Default to showing listings
             context['show_listings'] = True
+            context['show_inquiries'] = False
+            context['show_received_inquiries'] = False
 
+        # Add the current profile and user for display
+        context['current_profile'] = current_profile
+        context['current_user'] = self.request.user
         return context
+
+
 
 
 ### USER AUTHENTICATION ### 

@@ -20,5 +20,8 @@ class InquiryForm(forms.ModelForm):
         model = Inquiry
         fields = ['message']
         widgets = {
-            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter your inquiry message here'}),
+            'message': forms.Textarea(attrs={'placeholder': 'Enter your inquiry message here'}),
+        }
+        labels = {
+            'message': '',  # Remove the label
         }

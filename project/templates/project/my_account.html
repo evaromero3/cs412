@@ -12,25 +12,48 @@ My Account
         <ul>
             <li><a href="{% url 'my-account' %}?view=listings">View My Listings</a></li>
             <li><a href="{% url 'my-account' %}?view=inquiries">View My Inquiries</a></li>
+            <li><a href="{% url 'my-account' %}?view=received-inquiries">Received Inquiries</a></li>
             <li><a href="{% url 'create_listing' %}">Create a New Listing</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+            </li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
+        <!-- Display Logged-In User -->
+        <h2>Welcome, {{ current_user.username }}</h2>
+        <p>Profile: {{ current_profile.first_name }} {{ current_profile.last_name }}</p>
+
         {% if show_inquiries %}
-            <h2>My Inquiries</h2>
+            <h2>My Sent Inquiries</h2>
             <ul>
                 {% for inquiry in inquiries %}
                     <li>
-                        <strong>Listing:</strong> {{ inquiry.listing.item_name }}<br>
+                        <strong>Listing:</strong> <a href="{% url 'listing_detail' inquiry.listing.id %}">{{ inquiry.listing.item_name }}</a><br>
                         <strong>Message:</strong> {{ inquiry.message }}<br>
-                        <strong>From:</strong> {{ inquiry.buyer.user.username }}<br>
-                        <strong>Date:</strong> {{ inquiry.sent_date }}
+                        <strong>Sent Date:</strong> {{ inquiry.sent_date }}
                     </li>
                 {% empty %}
-                    <p>You have no inquiries yet.</p>
+                    <p>You have not sent any inquiries yet.</p>
+                {% endfor %}
+            </ul>
+        {% elif show_received_inquiries %}
+            <h2>Received Inquiries</h2>
+            <ul>
+                {% for inquiry in received_inquiries %}
+                    <li>
+                        <strong>Listing:</strong> <a href="{% url 'listing_detail' inquiry.listing.id %}">{{ inquiry.listing.item_name }}</a><br>
+                        <strong>Message:</strong> {{ inquiry.message }}<br>
+                        <strong>From:</strong> {{ inquiry.buyer.first_name }} {{ inquiry.buyer.last_name }}<br>
+                        <strong>Sent Date:</strong> {{ inquiry.sent_date }}
+                    </li>
+                {% empty %}
+                    <p>You have not received any inquiries yet.</p>
                 {% endfor %}
             </ul>
         {% elif show_listings %}
@@ -52,4 +75,5 @@ My Account
             </ul>
         {% endif %}
     </div>
+</div>
 {% endblock %}

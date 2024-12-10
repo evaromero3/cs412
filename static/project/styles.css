@@ -1,22 +1,49 @@
 /* STYLING FOR HOME PAGE */
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+
+body {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400; /* Set a default weight for normal text */
+    font-style: normal; /* Ensure it uses the normal style by default */
+    margin: 0;
+    padding: 0;
+    width: 100%; /* Ensure the body takes full width */
+    min-height: 100%; /* Ensure it covers the full height of the viewport */
+    display: block;
+    flex-direction: column; /* Allow the footer to be positioned at the bottom */
+}
+
+/* Footer styling */
+footer {
+    background-color: #F5F5F5; /* Light gray background */
+    color: #333; /* Dark gray text */
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    position: relative; /* Prevent overlap with content */
+}
+
 .content-container {
+    background-color: #98A869; /* Olive green background */
     display: flex; /* Use flexbox for side-by-side layout */
     gap: 20px; /* Add spacing between filter and listing sections */
     align-items: flex-start; /* Align sections to the top */
     padding: 20px; /* Add padding around the container */
     box-sizing: border-box;
+    width: 100%; /* Make it take the full width of the viewport */
 }
 
 /* Styling for the listing list container */
 .listing-list-container {
     text-align: center;
-    background: white;
+    background: #EAD9BD;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 950px;
+    max-width: 1200px;
     margin: auto;
     box-sizing: border-box;
     flex:1;
@@ -151,6 +178,12 @@
     z-index: 1000; /* Ensure it stays above other elements */
 }
 
+.navbar-title {
+    font-size: 1.5rem; /* Larger font size for the title */
+    font-weight: bold;
+    color: #333; /* Darker text color */
+}
+
 /* Navbar links */
 .navbar a {
     text-decoration: none; /* Remove underline */
@@ -270,4 +303,96 @@
 .main-content ul li img {
     border-radius: 5px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Main container for listing details */
+.listing-detail-container {
+    max-width: 900px;
+    margin: 20px auto; /* Center the container horizontally */
+    padding: 20px;
+    background-color: #ffffff; /* White background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-family: 'Nunito', sans-serif; /* Global font */
+    color: #333; /* Dark gray text */
+    text-align: center; /* Center the text inside the container */
+}
+
+/* Styling for the listing title */
+.listing-detail-container h1 {
+    font-size: 2rem; /* Larger font size for title */
+    margin-bottom: 20px;
+    color: #007bff; /* Blue color for the title */
+    text-align: center; /* Center align the title */
+}
+
+/* Flexbox layout for image and details */
+.listing-detail-content {
+    display: flex; /* Flexbox for side-by-side layout */
+    gap: 20px; /* Spacing between image and info */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: center; /* Center items horizontally */
+}
+
+/* Styling for the listing image */
+.listing-image img {
+    max-width: 100%; /* Responsive image size */
+    max-height: 200px; /* Limit the image height */
+    border-radius: 5px; /* Slightly rounded corners */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Styling for the listing details */
+.listing-info {
+    flex: 1; /* Allow the info section to take up remaining space */
+    font-size: 1rem; /* Standard font size */
+    line-height: 1.6; /* Improve readability */
+    text-align: left; /* Align text to the left inside the section */
+}
+
+/* Divider between sections */
+.section-divider {
+    border: none;
+    height: 2px;
+    background-color: #007bff; /* Blue divider color */
+    margin: 30px 0;
+}
+
+/* Inquiry form styling */
+.inquiry-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* Blue button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.inquiry-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Optional: Green background behind the container */
+.listing-detail-page {
+    background-color: #98A869; /* Light green background */
+    padding: 50px 0; /* Add some padding for spacing */
+    min-height: 100vh; /* Ensure it covers the full height of the viewport */
+}
+
+
+.logout-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+}
+
+.logout-button:hover {
+    color: #0056b3;
 }
