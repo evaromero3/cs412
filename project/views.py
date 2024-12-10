@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 
@@ -9,7 +9,7 @@ from .forms import CreateProfileForm, ListingForm, InquiryForm
 from django.contrib import messages
 
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 
 # Create your views here.
 
@@ -23,6 +23,8 @@ class ListingListView(ListView):
         category = self.request.GET.get('category')
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
+
+        queryset = queryset.filter(status='available')
 
         if self.request.user.is_authenticated:
             current_profile = Profile.objects.filter(user=self.request.user).first()
@@ -160,3 +162,32 @@ class CreateListingView(LoginRequiredMixin, CreateView):
         # Automatically set the seller as the current profile
         form.instance.seller = current_profile
         return super().form_valid(form)
+
+
+### Listing and Inquiry Status 
+class HandleInquiryView(LoginRequiredMixin, View):
+    def post(self, request, inquiry_id, *args, **kwargs):
+        action = kwargs.get('action')  # Capture the action ('accept' or 'reject') from URL
+        inquiry = get_object_or_404(Inquiry, id=inquiry_id)
+
+        # Ensure only the seller can manage inquiries for their listing
+        if inquiry.listing.seller.user != request.user:
+            messages.error(request, "You are not authorized to manage this inquiry.")
+            return redirect('my-account')
+
+        if action == 'accept':
+            # Mark the inquiry as accepted and update the listing
+            inquiry.status = 'accepted'
+            inquiry.listing.status = 'bought'
+            inquiry.listing.save()
+            inquiry.save()
+            messages.success(request, f"Inquiry for '{inquiry.listing.item_name}' accepted. Listing marked as bought.")
+        elif action == 'reject':
+            # Mark the inquiry as rejected
+            inquiry.status = 'rejected'
+            inquiry.save()
+            messages.success(request, f"Inquiry for '{inquiry.listing.item_name}' rejected.")
+        else:
+            return HttpResponseBadRequest("Invalid action.")
+        
+        return redirect('my-account')

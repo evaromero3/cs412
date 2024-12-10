@@ -29,6 +29,12 @@ class Listing(models.Model):
     posted_date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     picture = models.ImageField(upload_to='listing_pictures/', blank=True, null=True)
+
+    status = models.CharField(
+        max_length=10,
+        choices=[('available', 'Available'), ('bought', 'Bought')],
+        default='available'
+    )
     
     def __str__(self):
         return self.item_name
@@ -40,6 +46,11 @@ class Inquiry(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='inquiries')
     message = models.TextField()
     sent_date = models.DateTimeField(auto_now_add=True)
+
+    status = models.CharField(
+        max_length=10,
+        choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')],
+        default='pending')
 
     def __str__(self):
         return f"Inquiry by {self.buyer.first_name} on {self.listing.item_name}"
